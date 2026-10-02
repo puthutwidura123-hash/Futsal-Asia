@@ -1,0 +1,231 @@
+<!doctype html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, user-scalable=no">
+<meta name="theme-color" content="#08111f">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<link rel="manifest" href="manifest.webmanifest">
+<title>Futsal Asia Pro</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Saira+Condensed:wght@600;800;900&family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div id="app">
+
+  <!-- AUTH -->
+  <section class="scr" id="scr-auth">
+    <div class="hero">
+      <div class="logo"><span>FUTSAL</span><b>ASIA PRO</b></div>
+      <p class="tag">16 negara · aturan futsal FIFA · PvP online</p>
+    </div>
+    <div class="card auth-card" id="auth-online">
+      <div class="tabs"><button class="tab on" data-auth="in">Masuk</button><button class="tab" data-auth="up">Daftar</button></div>
+      <form id="f-auth" autocomplete="on">
+        <label class="only-up hide">Nama pemain<input name="username" maxlength="20" placeholder="contoh: GarudaMuda"></label>
+        <label>Email<input name="email" type="email" required autocomplete="email" placeholder="nama@email.com"></label>
+        <label>Kata sandi<input name="password" type="password" required minlength="6" autocomplete="current-password" placeholder="min. 6 karakter"></label>
+        <button class="btn primary big" type="submit" id="btn-auth">Masuk</button>
+        <button class="link" type="button" id="btn-forgot">Lupa kata sandi?</button>
+        <p class="msg" id="auth-msg"></p>
+      </form>
+    </div>
+    <div class="card auth-card hide" id="auth-offline">
+      <p><b>Mode online belum aktif.</b> Isi <code>js/config.js</code> dengan URL &amp; anon key Supabase untuk akun email dan PvP. Anda tetap bisa main melawan CPU.</p>
+    </div>
+    <button class="btn ghost" id="btn-guest">Main offline lawan CPU →</button>
+  </section>
+
+  <!-- HOME -->
+  <section class="scr hide" id="scr-home">
+    <header class="top">
+      <div class="logo sm"><span>FUTSAL</span><b>ASIA PRO</b></div>
+      <div class="me" id="me-box"></div>
+    </header>
+    <div class="menu-grid">
+      <button class="tile hot" data-go="setup"><i>⚽</i><b>Lawan CPU</b><small>Pertandingan cepat</small></button>
+      <button class="tile" data-go="pvp" data-online><i>⚔️</i><b>Tantang Teman</b><small>PvP online via email</small><em class="badge hide" id="inv-badge">0</em></button>
+      <button class="tile" data-go="teams"><i>🌏</i><b>Tim &amp; Karakter</b><small>16 negara Asia</small></button>
+      <button class="tile" data-go="history" data-online><i>🏆</i><b>Profil &amp; Riwayat</b><small>Statistik akun</small></button>
+      <button class="tile" data-go="controls"><i>🎮</i><b>Kontrol</b><small>Keyboard · sentuh · gamepad</small></button>
+      <button class="tile" data-go="rules"><i>📘</i><b>Aturan Futsal</b><small>Yang diterapkan di game</small></button>
+    </div>
+    <button class="btn ghost sm" id="btn-logout">Keluar akun</button>
+  </section>
+
+  <!-- TEAMS -->
+  <section class="scr hide" id="scr-teams">
+    <header class="top"><button class="back" data-go="home">←</button><h2 id="teams-title">Tim &amp; Karakter</h2></header>
+    <div class="team-grid" id="team-grid"></div>
+  </section>
+
+  <!-- SQUAD -->
+  <section class="scr hide" id="scr-squad">
+    <header class="top"><button class="back" id="squad-back">←</button><h2 id="squad-title"></h2></header>
+    <div class="squad-head" id="squad-head"></div>
+    <div class="squad" id="squad"></div>
+  </section>
+
+  <!-- SETUP CPU -->
+  <section class="scr hide" id="scr-setup">
+    <header class="top"><button class="back" data-go="home">←</button><h2>Lawan CPU</h2></header>
+    <div class="vs-pick">
+      <button class="pick" id="pick-home"></button>
+      <span class="vs">VS</span>
+      <button class="pick" id="pick-away"></button>
+    </div>
+    <div class="card form">
+      <label>Tingkat kesulitan<select id="opt-diff"><option value="0">Pemula</option><option value="1" selected>Profesional</option><option value="2">Legenda</option></select></label>
+      <label>Durasi per babak<select id="opt-len"><option value="2">2 menit</option><option value="3" selected>3 menit</option><option value="5">5 menit</option><option value="10">10 menit</option><option value="20">20 menit (penuh)</option></select></label>
+      <label>Sudut kamera<select id="opt-view"><option value="3d" selected>3D Siaran TV (terbaik)</option><option value="side">Samping 2D (ringan)</option><option value="top">Atas (taktis)</option></select></label>
+      <label>Jarak kamera<select id="opt-cam"><option value="11">Dekat</option><option value="15" selected>Sedang</option><option value="21">Jauh</option></select></label>
+      <label class="chk"><input type="checkbox" id="opt-auto" checked> Ganti pemain otomatis (kursor)</label>
+    </div>
+    <button class="btn primary big" id="btn-kickoff">Mulai Pertandingan</button>
+  </section>
+
+  <!-- PVP -->
+  <section class="scr hide" id="scr-pvp">
+    <header class="top"><button class="back" data-go="home">←</button><h2>Tantang Teman</h2></header>
+    <div class="card form">
+      <h3>Undang lewat email</h3>
+      <p class="hint">Teman harus punya akun dengan email ini. Ia akan melihat undangan di menu ini, atau bagikan link undangannya.</p>
+      <label>Email teman<input id="inv-email" type="email" placeholder="teman@email.com"></label>
+      <div class="row">
+        <label>Tim Anda<button class="pick sm" id="inv-team"></button></label>
+        <label>Durasi babak<select id="inv-len"><option value="2">2 menit</option><option value="3" selected>3 menit</option><option value="5">5 menit</option><option value="10">10 menit</option></select></label>
+      </div>
+      <button class="btn primary" id="btn-invite">Kirim Undangan</button>
+      <p class="msg" id="inv-msg"></p>
+    </div>
+    <h3 class="sec">Undangan</h3>
+    <div id="inv-list" class="inv-list"></div>
+  </section>
+
+  <!-- LOBBY -->
+  <section class="scr hide" id="scr-lobby">
+    <header class="top"><button class="back" id="lobby-back">←</button><h2>Ruang Pertandingan</h2></header>
+    <div class="card lobby">
+      <div class="lob-vs" id="lob-vs"></div>
+      <p id="lob-status" class="lob-status">Menghubungkan…</p>
+      <div class="spinner"></div>
+      <button class="btn ghost sm" id="btn-copy-link">Salin link undangan</button>
+    </div>
+  </section>
+
+  <!-- HISTORY -->
+  <section class="scr hide" id="scr-history">
+    <header class="top"><button class="back" data-go="home">←</button><h2>Profil &amp; Riwayat</h2></header>
+    <div class="card" id="prof-box"></div>
+    <h3 class="sec">Pertandingan terakhir</h3>
+    <div id="hist-list" class="inv-list"></div>
+  </section>
+
+  <!-- CONTROLS -->
+  <section class="scr hide" id="scr-controls">
+    <header class="top"><button class="back" data-go="home">←</button><h2>Kontrol</h2></header>
+    <div class="card"><table class="ctl">
+      <tr><th>Aksi (menyerang / bertahan)</th><th>Keyboard</th><th>Gamepad</th><th>Layar</th></tr>
+      <tr><td>Gerak</td><td>WASD / panah</td><td>Stik kiri</td><td>Joystick kiri</td></tr>
+      <tr><td>Umpan pendek / ganti pemain</td><td>J</td><td>A</td><td>A</td></tr>
+      <tr><td>Tembak (tahan = tenaga) / tekel</td><td>K / Spasi</td><td>X</td><td>B</td></tr>
+      <tr><td>Umpan lambung &amp; chip / panggil rekan menekan</td><td>L</td><td>B</td><td>C</td></tr>
+      <tr><td>Umpan terobosan / jaga jarak (contain)</td><td>U</td><td>Y</td><td>T</td></tr>
+      <tr><td>Gerak tipu (sole-roll) / sliding</td><td>I</td><td>RB</td><td>✦</td></tr>
+      <tr><td>Sprint</td><td>Shift</td><td>RT / LT</td><td>»</td></tr>
+      <tr><td>Ganti pemain manual</td><td>Q / E</td><td>LB</td><td>A (bertahan)</td></tr>
+      <tr><td>Jeda</td><td>Esc / P</td><td>Start</td><td>❚❚</td></tr>
+    </table>
+    <ul class="tips">
+      <li><b>First-time:</b> tekan umpan/tembak sebelum bola datang — pemain langsung menyepak saat menerima.</li>
+      <li><b>Arah tembakan:</b> tahan atas/bawah saat melepas tombol tembak untuk memilih tiang. Tenaga penuh berisiko melambung.</li>
+      <li><b>Chip:</b> tombol lambung saat menghadap gawang dari jarak 4–13 m mencungkil bola melewati kiper.</li>
+      <li><b>Bola mati:</b> arahkan dulu, lalu tekan aksi. Ingat aturan 4 detik!</li>
+      <li><b>Sliding</b> dari belakang hampir pasti pelanggaran — dan mulai pelanggaran ke-6, lawan dapat tendangan 10 meter.</li>
+    </ul></div>
+  </section>
+
+  <!-- RULES -->
+  <section class="scr hide" id="scr-rules">
+    <header class="top"><button class="back" data-go="home">←</button><h2>Aturan Futsal</h2></header>
+    <div class="card rules">
+      <p>Game ini mengikuti <i>Futsal Laws of the Game</i> FIFA, disederhanakan seperlunya:</p>
+      <ul>
+        <li>5 lawan 5 (1 kiper + 4 pemain), lapangan 40×20 m, gawang 3×2 m, bola pantul rendah.</li>
+        <li>2 babak, jam <b>berhenti</b> saat bola mati. Tim bertukar sisi di babak kedua.</li>
+        <li>Bola keluar garis samping → <b>tendangan ke dalam</b> (kick-in), tidak bisa langsung jadi gol.</li>
+        <li>Bola keluar garis gawang → <b>lemparan kiper</b> atau <b>tendangan sudut</b>.</li>
+        <li><b>Aturan 4 detik:</b> semua bola mati harus dimainkan dalam 4 detik; kiper juga maksimal 4 detik menguasai bola di setengah lapangannya.</li>
+        <li>Kiper tidak boleh menerima kembali bola dari rekan di setengah lapangannya sebelum disentuh lawan (back-pass), dan tidak boleh memegang umpan sengaja dari rekan.</li>
+        <li><b>Akumulasi pelanggaran</b> per babak: pelanggaran ke-6 dst. = tendangan bebas langsung dari titik 10 m tanpa pagar.</li>
+        <li>Pelanggaran di daerah penalti = <b>penalti</b> dari titik 6 m.</li>
+        <li>Kartu merah: tim bermain kurang satu orang selama 2 menit atau sampai kebobolan.</li>
+        <li>Lawan wajib berjarak 5 m saat bola mati (3 m saat sepak mula).</li>
+        <li>Pergantian pemain tidak terbatas (otomatis saat bola mati, berdasarkan stamina).</li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- GAME -->
+  <section class="scr hide" id="scr-game">
+    <canvas id="cv3" class="hide"></canvas>
+    <canvas id="cv"></canvas>
+    <div class="hud">
+      <div class="score">
+        <div class="tm l"><span class="fl" id="h-f0"></span><b id="h-n0"></b><i class="fouls" id="h-fo0"></i></div>
+        <div class="sc"><b id="h-s0">0</b><span>-</span><b id="h-s1">0</b></div>
+        <div class="tm r"><i class="fouls" id="h-fo1"></i><b id="h-n1"></b><span class="fl" id="h-f1"></span></div>
+        <div class="clock"><span id="h-half">1</span>·<b id="h-clock">20:00</b></div>
+      </div>
+      <div class="banner" id="h-banner"></div>
+      <div class="toast" id="h-toast"></div>
+      <div class="setinfo" id="h-set"></div>
+      <div class="net" id="h-net"></div>
+      <button class="pause-btn" id="btn-pause">❚❚</button>
+    </div>
+    <div class="touch" id="touch">
+      <div class="joy-zone"><div class="joy-base"><div class="joy-knob"></div></div><span class="joy-hint">Geser untuk bergerak</span></div>
+      <div class="btns">
+        <button data-btn="sprint" class="b sprint">»</button>
+        <button data-btn="skill" class="b skill">✦</button>
+        <button data-btn="thru" class="b t"><span id="lb-thru">T</span></button>
+        <button data-btn="lob" class="b c"><span id="lb-lob">C</span></button>
+        <button data-btn="pass" class="b a"><span id="lb-pass">A</span></button>
+        <button data-btn="shoot" class="b bb"><span id="lb-shoot">B</span></button>
+      </div>
+    </div>
+    <div class="rotate-hint" id="rotate-hint">↻ Putar HP ke lanskap untuk tampilan terbaik</div>
+    <div class="overlay hide" id="ov-pause">
+      <div class="card ov-card">
+        <h2>Jeda</h2>
+        <button class="btn primary" id="btn-resume">Lanjutkan</button>
+        <button class="btn" id="btn-sound">Suara: Hidup</button>
+        <button class="btn" id="btn-view">Sudut: 3D</button>
+        <button class="btn" id="btn-zoom">Jarak kamera: Sedang</button>
+        <button class="btn" id="btn-fs">Layar penuh</button>
+        <button class="btn danger" id="btn-quit">Keluar pertandingan</button>
+      </div>
+    </div>
+    <div class="overlay hide" id="ov-half"><div class="card ov-card" id="half-box"></div></div>
+    <div class="overlay hide" id="ov-end"><div class="card ov-card" id="end-box"></div></div>
+  </section>
+
+  <!-- MODAL: team picker -->
+  <div class="overlay hide" id="ov-pick"><div class="card picker"><header class="top"><button class="back" id="pick-close">×</button><h2>Pilih tim</h2></header><div class="team-grid" id="pick-grid"></div></div></div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+<script src="js/config.js"></script>
+<script src="js/data.js"></script>
+<script src="js/engine.js"></script>
+<script src="js/render.js"></script>
+<script src="js/render-side.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/three@0.149.0/build/three.min.js"></script>
+<script src="js/render3d.js"></script>
+<script src="js/input.js"></script>
+<script src="js/net.js"></script>
+<script src="js/app.js"></script>
+</body>
+</html>

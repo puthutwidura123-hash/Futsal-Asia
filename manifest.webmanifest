@@ -1,0 +1,10 @@
+{
+  "name": "Futsal Asia Pro",
+  "short_name": "Futsal Asia",
+  "start_url": "./",
+  "display": "fullscreen",
+  "orientation": "landscape",
+  "background_color": "#08111f",
+  "theme_color": "#08111f",
+  "icons": [{ "src": "icon.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any" }]
+}
