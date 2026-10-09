@@ -33,7 +33,7 @@
       </form>
     </div>
     <div class="card auth-card hide" id="auth-offline">
-      <p><b>Mode online belum aktif.</b> Isi <code>js/config.js</code> dengan URL &amp; anon key Supabase untuk akun email dan PvP. Anda tetap bisa main melawan CPU.</p>
+      <p><b>Mode online belum aktif.</b> Isi <code>config.js</code> dengan URL &amp; anon key Supabase untuk akun email dan PvP. Anda tetap bisa main melawan CPU.</p>
     </div>
     <button class="btn ghost" id="btn-guest">Main offline lawan CPU →</button>
   </section>
@@ -177,7 +177,7 @@
         <div class="tm l"><span class="fl" id="h-f0"></span><b id="h-n0"></b><i class="fouls" id="h-fo0"></i></div>
         <div class="sc"><b id="h-s0">0</b><span>-</span><b id="h-s1">0</b></div>
         <div class="tm r"><i class="fouls" id="h-fo1"></i><b id="h-n1"></b><span class="fl" id="h-f1"></span></div>
-        <div class="clock"><span id="h-half">1</span>·<b id="h-clock">20:00</b></div>
+        <div class="clock"><span id="h-half">B1</span><b id="h-clock">20:00</b></div>
       </div>
       <div class="banner" id="h-banner"></div>
       <div class="toast" id="h-toast"></div>
@@ -203,6 +203,7 @@
         <button class="btn primary" id="btn-resume">Lanjutkan</button>
         <button class="btn" id="btn-sound">Suara: Hidup</button>
         <button class="btn" id="btn-view">Sudut: 3D</button>
+        <button class="btn" id="btn-gfx">Grafis: Otomatis</button>
         <button class="btn" id="btn-zoom">Jarak kamera: Sedang</button>
         <button class="btn" id="btn-fs">Layar penuh</button>
         <button class="btn danger" id="btn-quit">Keluar pertandingan</button>
@@ -217,15 +218,15 @@
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
-<script src="js/config.js"></script>
-<script src="js/data.js"></script>
-<script src="js/engine.js"></script>
-<script src="js/render.js"></script>
-<script src="js/render-side.js"></script>
+<script src="config.js"></script>
+<script src="data.js"></script>
+<script src="engine.js"></script>
+<script src="render.js"></script>
+<script src="render-side.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/three@0.149.0/build/three.min.js"></script>
-<script src="js/render3d.js"></script>
-<script src="js/input.js"></script>
-<script src="js/net.js"></script>
-<script src="js/app.js"></script>
+<script src="render3d.js"></script>
+<script src="input.js"></script>
+<script src="net.js"></script>
+<script src="app.js"></script>
 </body>
 </html>
